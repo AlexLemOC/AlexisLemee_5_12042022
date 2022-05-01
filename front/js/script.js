@@ -72,7 +72,8 @@ function lesKanaps(index) {
   let zoneArticle = document.querySelector("#items");
   // boucle pour chaque indice(nommé 'article') dans index
   for (let article of index) {
-    /* création et ajout des zones d'articles, insertion de l'adresse produit via chemin      produit + paramètres(son id);*/
+    /* création et ajout des zones d'articles, insertion de l'adresse produit via chemin      
+    produit + paramètres(son id);*/
  
     zoneArticle.innerHTML += `<a href="./product.html?_id=${article._id}">
     <article>
@@ -83,3 +84,4 @@ function lesKanaps(index) {
   </a>`;
   }
 }
+//localStorage.clear();
