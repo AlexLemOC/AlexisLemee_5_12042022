@@ -1,1 +1,7 @@
-https://alexlemoc.github.io/AlexisLemee_5_12042022/front/html/index.html
+# KANAP
+
+Projet OpenClassrooms de site e-commerce de vente de canapé.
+Gestion d'un panier et de diverses éléments avec Node.js
+
+Ne fonctionne qu'avec un environnement Node, cloner le projet et positionner le terminal dans back avec cd back
+puis ouvrir simplement la page internet de index.html
