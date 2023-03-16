@@ -1,116 +1,119 @@
-<!DOCTYPE html>
-<html lang="fr">
-  <head>
-    <title>Nom du produit</title>
+// On identifie l'URL et on récupère l'id
 
-    <meta charset="utf-8">
-    <meta name="description" content="Plateforme incroyable de e-commerce">
+let str = window.location.href;
+let url = new URL(str);
+let urlSearchParamId = url.searchParams.get("id");
+const urlProduct = "http://localhost:3000/api/products/";
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="../css/style.css" rel="stylesheet" />
-    <link href="../css/product.css" rel="stylesheet" />
-    <link rel="shortcut icon" href="../images/favicon-32x32.png">
+// déclarations pour le panier
+const colorArticles = document.querySelector("#colors");
+const quantityArticles = document.querySelector("#quantity");
+let article = "";
+getArticle();
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  </head>
+// On récupère les article du back avec une fonction
 
-  <body>
-    <header>
-      <div class="limitedWidthBlockContainer informations">
-        <div class="limitedWidthBlock">
-          <ul>
-            <li><img src="../images/icons/phone.svg" alt="logo de téléphone" class="informations__phone">01 23 45 67 89</li>
-            <li><img src="../images/icons/mail.svg" alt="logo d'une enveloppe" class="informations__mail">support@name.com</li>
-            <li><img src="../images/icons/adress.svg" alt="logo d'un point de géolocalisation" class="informations__address">01 23 45 67 89</li>
-          </ul>
-        </div>
-      </div>
-      <div class="limitedWidthBlockContainer menu">
-        <div class="limitedWidthBlock">
-          <a href="./index.html">
-            <img class="logo" src="../images/logo.png" alt="Logo de l'entreprise">
-          </a>
-          <nav>
-            <ul>
-              <a href="./index.html"><li>Accueil</li></a>
-              <a href="./cart.html"><li>Panier</li></a>
-            </ul>
-          </nav>
-        </div>
-      </div>
-      <img class="banniere" src="../images/banniere.png" alt="Baniere">
-    </header>
+function getArticle() {
+    fetch(urlProduct + urlSearchParamId)
+    .then((res) => {
+        return res.json();
+    })
 
-    <main class="limitedWidthBlockContainer">
-      <div class="limitedWidthBlock">
-        <section class="item">
-          <article>
-            <div class="item__img">
-              <!-- <img src="../images/logo.png" alt="Photographie d'un canapé"> -->
-            </div>
-            <div class="item__content">
+    .then(async function (API) {
+        article = await API;
+        console.table(article);
+        if (article) {
+            CatchArticles(article);
+        }
+    })
 
-              <div class="item__content__titlePrice">
-                <h1 id="title"><!-- Nom du produit --></h1>
-                <p>Prix : <span id="price"><!-- 42 --></span>€</p>
-              </div>
+    .catch((error) => {
+        window.alert("Erreur ! Impossible de récupérer les articles de l'API");
+        document.location.href = "index.html"
+    })
+}
 
-              <div class="item__content__description">
-                <p class="item__content__description__title">Description :</p>
-                <p id="description"><!-- Dis enim malesuada risus sapien gravida nulla nisl arcu. --></p>
-              </div>
+// On détail la fonction qui récupère les articles dans le back
+// On utilise innerHTML pour placer les articles et on appel la fonction
 
-              <div class="item__content__settings">
-                <div class="item__content__settings__color">
-                  <label for="color-select">Choisir une couleur :</label>
-                  <select name="color-select" id="colors">
-                      <option value="">--SVP, choisissez une couleur --</option>
-<!--                       <option value="vert">vert</option>
-                      <option value="blanc">blanc</option> -->
-                  </select>
-                </div>
+function CatchArticles(article){
+    let ArticleImg = document.querySelector(".item__img");
+    ArticleImg.innerHTML = `<img src="${article.imageUrl}" alt="${article.altTxt}"><img>`;
+    let ArticleName = document.querySelector(`.item__content__titlePrice`);
+    ArticleName.innerHTML = `<h1 id="title">${article.name}</h1>
+    <p>Prix : <span id="price">${article.price}</span>€</p>`;
+    let ArticleDescription = document.getElementById('description');
+    ArticleDescription.innerHTML = `<p>${article.description}</p>`;
 
-                <div class="item__content__settings__quantity">
-                  <label for="itemQuantity">Nombre d'article(s) (1-100) :</label>
-                  <input type="number" name="itemQuantity" min="1" max="100" value="0" id="quantity">
-                </div>
-              </div>
+    for (let colors of article.colors) {
+        let ArticleColors = document.createElement("option");
+        document.querySelector("#colors").appendChild(ArticleColors);
+        ArticleColors.value = colors;
+        ArticleColors.innerHTML = colors;
+    }
+    addCart(article);
+}
 
-              <div class="item__content__addButton">
-                <button id="addToCart">Ajouter au panier</button>
-              </div>
+// On ajoute un objet au panier avec un Click event sur le bouton Cart avec une fonction
 
-            </div>
-          </article>
-        </section>
-      </div>
-    </main>
-    
-    <footer>
-      <div class="limitedWidthBlockContainer footerMain">
-        <div class="limitedWidthBlock">
-          <div>
-            <img class="logo" src="../images/logo.png" alt="Logo de l'entreprise">
-          </div>
-          <div>
-            <p>10 quai de la charente <br>75019 Paris 19</p>
-          </div>
-          <div>
-            <p>Téléphone : 01 23 45 67 89</p>
-          </div>
-          <div>
-            <p>Email : support@name.com</p>
-          </div>
-        </div>
-      </div>
-      <div class="limitedWidthBlockContainer footerSecondary">
-        <div class="limitedWidthBlock">
-          <p>© Copyright 2021 - 2042 | Openclassrooms by Openclassrooms | All Rights Reserved | Powered by <3</p>
-        </div>
-      </div>
-    </footer>
-  <script src="../js/product.js"></script>
-  </body>
-</html>
+function addCart(article) {
+    const BtnCart = document.querySelector("#addToCart");
+
+    BtnCart.addEventListener("click", (event)=>{
+
+// On créé une alerte qui empêche de ne rien sélectionner
+
+        if (quantityArticles.value < 1) {
+            window.alert("Erreur ! Merci de mettre une quantité.");
+        }
+
+        else if (colorArticles.selectedIndex < 1) {
+            window.alert("Erreur ! Merci de selectionner une couleur.");
+        }
+
+        else if (quantityArticles.value > 100 ){
+            window.alert("Erreur ! Vous ne pouvez acheter que 100 articles maximum par commande.");
+        }
+            if (quantityArticles.value > 0 && quantityArticles.value <=100 && colorArticles.selectedIndex > 0){
+                let choiceColor = colorArticles.value;
+                let choiceQuantity = quantityArticles.value;
+
+// On définie toutes les informations d'un produit (map)
+
+                let detailProduit = {
+                    idProduit: urlSearchParamId,
+                    couleurProduit: choiceColor,
+                    quantiteProduit: Number(choiceQuantity),
+                    nomProduit: article.name,
+                    prixProduit: article.price,
+                    descriptionProduit: article.description,
+                    imgProduit: article.imageUrl,
+                    altImgProduit: article.altTxt
+                };
+
+                let produitLocalStorage = JSON.parse(localStorage.getItem("produit"));
+
+// On identifie et analyse les quantités et les couleurs des produits pour les additionner
+
+                if (produitLocalStorage) {
+                    const resultFind = produitLocalStorage.find(
+                        (resultat) => resultat.idProduit === urlSearchParamId && resultat.couleurProduit === choiceColor);
+                        if (resultFind) {
+                            let newQuantite = 
+                            parseInt(detailProduit.quantiteProduit) + parseInt(resultFind.quantiteProduit);
+                            resultFind.quantiteProduit = newQuantite;
+                            localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
+                            window.location.href ="cart.html";
+                        } else {
+                            produitLocalStorage.push(detailProduit);
+                            localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
+                            window.location.href ="cart.html";
+                        }
+                } else {
+                    produitLocalStorage =[];
+                    produitLocalStorage.push(detailProduit);
+                    localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
+                    window.location.href ="cart.html";
+                }}
+    });
+}
