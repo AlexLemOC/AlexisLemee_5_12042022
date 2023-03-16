@@ -33,6 +33,19 @@ exports.getOneProduct = (req, res, next) => {
   )
 };
 
+/**
+ *
+ * Expects request to contain:
+ * contact: {
+ *   firstName: string,
+ *   lastName: string,
+ *   address: string,
+ *   city: string,
+ *   email: string
+ * }
+ * products: [string] <-- array of product _id
+ *
+ */
 exports.orderProducts = (req, res, next) => {
   if (!req.body.contact ||
       !req.body.contact.firstName ||
